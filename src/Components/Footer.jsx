@@ -58,6 +58,7 @@ function Footer() {
           <form onSubmit={handleSubscribe} className="newsletter-form">
             <input
               type="email"
+              required
               placeholder="Enter your email"
               className="newsletter-input"
               onChange={(text) => setEmailInput(text.target.value)}

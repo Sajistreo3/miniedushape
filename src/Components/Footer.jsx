@@ -4,14 +4,50 @@ import '../App.css';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import Correct from './MarkingIcons/Correct';
 import Incorrect from './MarkingIcons/Incorrect';
+import { db } from '../Configs/firebase';
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 
-const Footer = () => {
+function Footer() {
   const [subcribeClicked, setSubcribeClicked] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
-  function handleSubscribe(e) {
+  const getNewsLetterEmails = async () => {
+    const emailsRef = collection(db, 'news_letter_emails');
+    const q = query(emailsRef, where("status", "==", true));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      const emails = querySnapshot.docs.map(doc => doc.data());
+      console.log(emails);
+    } catch (error) {
+      console.error("Error fetching emails:", error);
+    }
+  }
+
+  const addNewsLetterEmail = async (email) => {
+    try {
+      const emailsRef = collection(db, 'news_letter_emails');
+      await addDoc(emailsRef, {
+        email,
+        createdAt: serverTimestamp(),
+        status: true
+      })
+      console.log("Email added successfully!");
+      setIsSubscribed(true);
+    } catch (error) {
+      console.error("Error adding email:", error);
+      setIsSubscribed(false);
+    }
+  }
+  
+
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     setSubcribeClicked(true);
+    // getNewsLetterEmails();
+    await addNewsLetterEmail(emailInput)
+    setEmailInput("");
   }
 
   return (
@@ -24,6 +60,8 @@ const Footer = () => {
               type="email"
               placeholder="Enter your email"
               className="newsletter-input"
+              onChange={(text) => setEmailInput(text.target.value)}
+              value={emailInput}
             />
             <button type="submit" className="newsletter-button">Subscribe</button>
           </form>

@@ -12,7 +12,6 @@ const Footer = () => {
   function handleSubscribe(e) {
     e.preventDefault();
     setSubcribeClicked(true);
-    
   }
 
   return (

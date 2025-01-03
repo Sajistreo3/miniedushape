@@ -1,15 +1,26 @@
 // Footer.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import Correct from './MarkingIcons/Correct';
+import Incorrect from './MarkingIcons/Incorrect';
 
 const Footer = () => {
+  const [subcribeClicked, setSubcribeClicked] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  function handleSubscribe(e) {
+    e.preventDefault();
+    setSubcribeClicked(true);
+    
+  }
+
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="newsletter">
           <h3>Subscribe to our Newsletter</h3>
-          <form className="newsletter-form">
+          <form onSubmit={handleSubscribe} className="newsletter-form">
             <input
               type="email"
               placeholder="Enter your email"
@@ -17,6 +28,8 @@ const Footer = () => {
             />
             <button type="submit" className="newsletter-button">Subscribe</button>
           </form>
+          {isSubscribed && subcribeClicked ? (<Correct />) : ('')}
+          {!isSubscribed && subcribeClicked ? (<Incorrect />) : ('')}
         </div>
         <div className="social-links">
           <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
